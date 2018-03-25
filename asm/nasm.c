@@ -62,6 +62,10 @@
 #include "iflag.h"
 #include "ver.h"
 
+/* Indicates which instructions to expect. */
+
+static enum insn_set insn_set = INSN_SET_default;
+
 /*
  * This is the maximum number of optimization passes to do.  If we ever
  * find a case where the optimizer doesn't naturally converge, we might
@@ -74,6 +78,8 @@ struct forwrefinfo {            /* info held on forward refs. */
     int operand;
 };
 
+static int parse_insn_set(const char *insn_set_arg);
+static void insn_list(FILE *outfile);
 static void parse_cmdline(int, char **, int);
 static void assemble_file(const char *, StrList **);
 static bool is_suppressed_warning(int severity);
@@ -734,13 +740,19 @@ static bool process_arg(char *p, char *q, int pass)
         return false;
 
     if (p[0] == '-' && !stopoptions) {
-        if (strchr("oOfpPdDiIlFXuUZwW", p[1])) {
+        if (strchr("AoOfpPdDiIlFXuUZwW", p[1])) {
             /* These parameters take values */
             if (!(param = get_param(p, q, &advance)))
                 return advance;
         }
 
         switch (p[1]) {
+
+        case 'A':
+            if (parse_insn_set(param) != 0)
+                nasm_error(ERR_NONFATAL|ERR_NOFILE|ERR_USAGE,
+                           "unrecognised instruction set: %s", param);
+            break;
         case 's':
             if (pass == 1)
                 error_file = stdout;
@@ -878,7 +890,8 @@ static bool process_arg(char *p, char *q, int pass)
                  "    or nasm -v (or --v) for version info\n\n"
                  "    -t          assemble in SciTech TASM compatible mode\n");
             printf
-                ("    -E (or -e)  preprocess only (writes output to stdout by default)\n"
+                ("    -A <insn>   specify target instruction set\n"
+                 "    -E (or -e)  preprocess only (writes output to stdout by default)\n"
                  "    -a          don't preprocess (assemble only)\n"
                  "    -M          generate Makefile dependencies on stdout\n"
                  "    -MG         d:o, missing files assumed generated\n"
@@ -927,6 +940,10 @@ static bool process_arg(char *p, char *q, int pass)
                 printf("valid output formats for -f are"
                        " (`*' denotes default):\n");
                 ofmt_list(ofmt, stdout);
+            } else if (p[2] == 'A') {
+                printf("valid target instruction sets for -A are"
+                       " (`*' denotes default):\n");
+                insn_list(stdout);
             } else {
                 printf("For a list of valid output formats, use -hf.\n");
                 printf("For a list of debug formats, use -f <form> -y.\n");
@@ -1195,6 +1212,24 @@ static void process_response_file(const char *file, int pass)
     fclose(f);
 }
 
+static int parse_insn_set(const char *insn_set_arg)
+{
+    if (strcmp(insn_set_arg, "x86") == 0)
+        insn_set = INSN_SET_x86;
+    else if (strcmp(insn_set_arg, "risc-v") == 0)
+        insn_set = INSN_SET_riscv;
+    else
+        return -1;
+
+    return 0;
+}
+
+static void insn_list(FILE *outfile)
+{
+    fprintf(outfile, "  * x86   \n");
+    fprintf(outfile, "    risc-v\n");
+}
+
 static void parse_cmdline(int argc, char **argv, int pass)
 {
     FILE *rfile;
@@ -1287,6 +1322,10 @@ static void assemble_file(const char *fname, StrList **depend_ptr)
     int pass_max;
     uint64_t prev_offset_changed;
     unsigned int stall_count = 0; /* Make sure we make forward progress... */
+
+    /* Tells the parser what instruction
+     * set to expect. */
+    set_insn_set(insn_set);
 
     switch (cmd_sb) {
     case 16:
