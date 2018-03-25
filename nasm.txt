@@ -26,6 +26,10 @@ OPTIONS
 	Causes *nasm* to process options from filename as if they were included on
 	the command line.
 
+*-A* 'instruction set'::
+	Specify the target instruction set. To see a list of valid values, use
+	the *-hA' option.
+
 *-a*::
 	Causes *nasm* to assemble the given input file without first applying the
 	macro preprocessor.
