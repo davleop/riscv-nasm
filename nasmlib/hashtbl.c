@@ -40,7 +40,7 @@
 #include "compiler.h"
 
 #include <string.h>
-#include "nasm.h"
+
 #include "hashtbl.h"
 
 #define HASH_MAX_LOAD   2 /* Higher = more memory-efficient, slower */

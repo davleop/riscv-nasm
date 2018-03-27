@@ -16,10 +16,9 @@ configure_file("version.h" "version.h")
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 include_directories("include")
 include_directories("asm")
-include_directories("x86")
 
 if (CMAKE_COMPILER_IS_GNUCC)
-	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -W -Wpedantic")
+	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Werror -Wfatal-errors -Wpedantic")
 	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-parameter -Wno-unused-function")
 endif (CMAKE_COMPILER_IS_GNUCC)
 

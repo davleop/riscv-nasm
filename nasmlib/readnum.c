@@ -41,7 +41,6 @@
 
 #include "nasmlib.h"
 #include "error.h"
-#include "nasm.h"               /* For globalbits */
 
 #define lib_isnumchar(c)    (nasm_isalnum(c) || (c) == '$' || (c) == '_')
 
