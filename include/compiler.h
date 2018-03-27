@@ -56,6 +56,8 @@
 
 #ifdef HAVE_CONFIG_H
 # include "config/config.h"
+#elif defined (HAVE_CMAKE_CONFIG_H)
+# include "config.h"
 #elif defined(_MSC_VER) && (_MSC_VER >= 1310)
 # include "config/msvc.h"
 #elif defined(__WATCOMC__)
