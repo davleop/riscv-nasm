@@ -22,7 +22,6 @@ configure_file("config/config.h.cmake" "config.h")
 
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 include_directories("include")
-include_directories("asm")
 
 if (CMAKE_COMPILER_IS_GNUCC)
 	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Werror -Wfatal-errors -Wpedantic")
