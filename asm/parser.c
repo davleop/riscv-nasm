@@ -55,9 +55,16 @@
 #include "tables.h"
 
 
+static enum insn_set target_insn_set = INSN_SET_default;
+
 static int is_comma_next(void);
 
 static struct tokenval tokval;
+
+void set_insn_set(enum insn_set insn_set)
+{
+	target_insn_set = insn_set;
+}
 
 static int prefix_slot(int prefix)
 {
@@ -435,6 +442,11 @@ insn *parse_line(int pass, char *buffer, insn *result, ldfunc ldef)
     bool first;
     bool recover;
     int i;
+
+    /* First check if the target
+     * instruction set is riscv */
+    if (target_insn_set == INSN_SET_riscv)
+        return parse_line_riscv(pass, buffer, result, ldef);
 
 restart_parse:
     first               = true;
