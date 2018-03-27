@@ -8,8 +8,7 @@ include ("cmake/generate-version.cmake")
 
 generate_version("h" "version.h")
 
-add_custom_target("version" ALL
-	DEPENDS "version.h")
+add_custom_target("version" ALL DEPENDS "version.h")
 
 include(CheckIncludeFiles)
 check_include_files("unistd.h" HAVE_UNISTD_H)
@@ -24,8 +23,8 @@ include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 include_directories("include")
 
 if (CMAKE_COMPILER_IS_GNUCC)
-	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Werror -Wfatal-errors -Wpedantic")
-	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-parameter -Wno-unused-function")
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Werror -Wfatal-errors -Wpedantic")
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-parameter -Wno-unused-function")
 endif (CMAKE_COMPILER_IS_GNUCC)
 
 add_definitions("-DHAVE_CMAKE_CONFIG_H")
