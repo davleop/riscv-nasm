@@ -39,7 +39,15 @@
 #ifndef NASM_PARSER_H
 #define NASM_PARSER_H
 
+enum insn_set {
+    INSN_SET_x86,
+    INSN_SET_riscv,
+    INSN_SET_default = INSN_SET_x86
+};
+
 insn *parse_line(int pass, char *buffer, insn *result, ldfunc ldef);
+insn *parse_line_riscv(int pass, char *buffer, insn *result, ldfunc ldef);
 void cleanup_insn(insn *instruction);
+void set_insn_set(enum insn_set insn_set);
 
 #endif
