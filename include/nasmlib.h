@@ -42,6 +42,7 @@
 #include "bytesex.h"
 
 #include <ctype.h>
+#include <time.h>
 #include <stdio.h>
 #include <string.h>
 #ifdef HAVE_STRINGS_H
